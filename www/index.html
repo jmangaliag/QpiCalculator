@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>QPI Calculator</title>
+        <link rel="icon" href="http://example.com/favicon.png">
+        
+        <!-- ONESEN UI LINK-->
+            <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css"> <!-- Mas maganda if 530x800 ang resolution ata? or kayo ahhaahaaha-->
+            <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+       
+        <!-- SCRIPT -->
+        <script>
+            var sum = 0, counter = 0;
+            function addLoad(g){
+                document.getElementById("loadAlert").style.visibility = "visible";
+                setTimeout(showLoad, 1000);
+            }
+
+            function showLoad(){
+                getGrades('=');
+            }
+            
+            function getGrades(grade){
+                var textArea = document.getElementById("txtArea");
+                var finalQPI = document.getElementById("txtInput");
+                var textSummarize = document.getElementById("txtAreaSummarize");
+                var gradesFormula = "", listGrades = [];
+
+                // Ginakuha ang numeric value ng letter gradessss
+                if(grade == "A"){ numericGrade = 4.0;}
+                else if(grade == "B+"){ numericGrade = 3.5;}
+                else if(grade == "B"){ numericGrade = 3.0;}
+                else if(grade == "C+"){ numericGrade = 2.5;}
+                else if(grade == "C"){ numericGrade = 2.0;}
+                else if(grade == "D"){ numericGrade = 1.0;}
+                else if(grade == "F/FD"){ numericGrade = 0.0;}
+                
+               if(textArea.value == "" && grade != "CLR" && grade != "="){ // Ginakuha ang grades sa pag click sa button and gina add ang numeric value nila tanan
+                    //Pang clear lang ung code below
+                    textArea.innerHTML = ""; 
+                    sum = 0;
+                    counter = 0;
+                    finalQPI.value = 0;
+                    txtAreaSummarize.innerHTML = "";
+                    document.getElementById("btnEquals").disabled = false;
+                    //Sa start ni sya para maayos ang format ng text
+                    gradesFormula = "(" + grade + ")";
+                    sum += numericGrade;
+                    counter++;
+                    textArea.innerHTML = gradesFormula;
+                }
+                else if(textArea.value != "" && grade != "CLR" && grade != "="){ // Same ra ni sa first condition ^ wala lang ung clear clear shit
+                    gradesFormula =  textArea.value + " + (" + grade + ")";
+                    sum += numericGrade;
+                    counter++;
+                    textArea.innerHTML = gradesFormula;
+                }
+                else if(grade == "=" && txtAreaSummarize != ""){ // Ginasummarize tanan here like ung sum and final qpi. (sum ng numeric value * 3)/(ilang subjects * 3)
+                    if(sum == 0 && counter == 0){
+                        var qpi = "Wala dong";
+                        txtAreaSummarize.innerHTML = "Please input some grades dude pare chong.";
+                        finalQPI.value = "Final QPI: " + qpi;
+                        document.getElementById("loadAlert").style.visibility = "hidden";
+                    }
+                    else{
+                        sum *= 3, counter *= 3;
+                        var summarize = textArea.value + "\n\n " + sum + "/" + counter;
+                        var qpi = (sum / counter).toFixed(2);
+                        finalQPI.value = "Final QPI: " + qpi;
+                        txtAreaSummarize.innerHTML = summarize;
+                        textArea.innerHTML = ""; 
+                        document.getElementById("loadAlert").style.visibility = "hidden";
+                    }
+                    document.getElementById("btnEquals").disabled = true;
+                }
+                else if(grade == "CLR" && grade != "="){ // Ginaclear ang tanan nakalagay sa text area and ung sa compute compute
+                    textArea.innerHTML = ""; 
+                    sum = 0;
+                    counter = 0;
+                    finalQPI.value = 0;
+                    txtAreaSummarize.innerHTML = "";
+                    document.getElementById("btnEquals").disabled = false;
+                }
+            }
+
+           
+        </script>
+    </head>
+    <body bgcolor="#243447">
+    
+        <ons-row width="100%">
+            <ons-col>
+                <div>
+                    <textarea id="txtArea" style="width: 100%; color:white; text-align: right" class="textarea textarea--transparent" rows="5" placeholder="" value=""readonly></textarea>
+                </div>
+            </ons-col>
+        </ons-row>
+        <ons-row width="100%">
+            <ons-col>
+                <div>
+                    <textarea id="txtAreaSummarize" style="width: 100%; color:white ; text-align: center" class="textarea textarea--transparent" rows="3" placeholder="" value=""readonly></textarea>
+            </ons-col>
+        </ons-row>
+        <ons-row width="100%">
+            <ons-col>
+                <div>
+                    <input id="txtInput" style="width: 100%;text-align: center; font-size: 20px; color:white; height: 60px" type="text" class="text-input text-input--underbar" placeholder="text" value="0" readonly>
+                </div>
+            </ons-col>
+        </ons-row>
+
+        <ons-row style="height:100px">
+            <ons-col >  
+                <button style="width: 99%; height: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="A" onclick="getGrades(value)">A</button>
+            </ons-col>
+            <ons-col >
+                <button style="width: 99%; height: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="B+" onclick="getGrades(value)">B+</button>
+            </ons-col>   
+            <ons-col >             
+                <button style="width: 99%; height: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="B" onclick="getGrades(value)">B</button>
+            </ons-col>
+        </ons-row>
+
+        <ons-row style="height:100px">
+            <ons-col>  
+                <button style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="C+" onclick="getGrades(value)">C+</button>
+            </ons-col>
+            <ons-col>
+                    <button style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="C" onclick="getGrades(value)">C</button>
+            </ons-col>   
+            <ons-col>             
+                    <button style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="D" onclick="getGrades(value)">D</button>
+            </ons-col>
+        </ons-row>
+
+        <ons-row style="height:100px">
+            <ons-col >  
+                    <button style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="F/FD" onclick="getGrades(value)">F/FD</button>
+            </ons-col>
+            <ons-col  >
+                    <button style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: white" class="button--cta" value="CLR" onclick="getGrades(value)">CLR</button>
+            </ons-col>   
+            <ons-col  >             
+                    <button id="btnEquals" style="height: 99%;  width: 99%; background-color:  rgb(36, 52, 71); color: pink" class="button--cta" value="=" onclick="addLoad(value)">=</button>
+            </ons-col>
+        </ons-row>
+
+        <div id="loadAlert" style="visibility: hidden">
+            <div class="alert-dialog-mask alert-dialog-mask--material"></div>
+            <div class="alert-dialog alert-dialog--material">
+                <div class="alert-dialog-container alert-dialog-container--material">
+                    <div class="alert-dialog-title alert-dialog-title--material">
+                        Computing....
+                    </div>
+                    <div class="alert-dialog-content alert-dialog-content--material">
+                        <div class="progress-bar progress-bar--indeterminate">
+                        </div>
+                    </div>
+                    </br>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
